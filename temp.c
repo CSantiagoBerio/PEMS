@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 /* Driver Header files */
 #include <ti/drivers/GPIO.h>
@@ -59,6 +60,7 @@
 #define READ_ERROR          "DHT22 reading failed\n"
 #define READ_START          "DHT22 starting read\n"
 #define READ_END            "DHT22 read ended\n"
+#define BAD_CHECKSUM        "Checksum doesn't match\n"
 
 #define LOW (0)
 #define HIGH (1)
@@ -208,10 +210,8 @@ void DHT_ReadData(void)
     //    }while(countData != 82);
 }
 
-void translateData(){
-    int hum, temp = 16; // Size of bits for Humidity and Temperature
-    int checksum = 4; // Size of bits for checksum
-    int dataBits = 40; // Size of usable bits for reading
+void translateData(double *readings){
+    int checksum; // Size of bits for checksum
     int i, j;
     int32_t rawData[40] = {0}; // Array to hold our usable bits
 
@@ -236,17 +236,38 @@ void translateData(){
         DHT_Data[2] |= (rawData[i+16] << (7-i));
         DHT_Data[3] |= (rawData[i+24] << (7-i));
         DHT_Data[4] |= (rawData[i+32] << (7-i));
-
     }
 
+    checksum = DHT_Data[0] + DHT_Data[1] + DHT_Data[2] + DHT_Data[3];
+    if(checksum != DHT_Data[4]){
+        UART_write(uartHandle, BAD_CHECKSUM, sizeof(BAD_CHECKSUM));
+    }
 
+    readings[0] = (DHT_Data[0] << 8) | DHT_Data[1];
+
+
+    readings[1] = ((DHT_Data[2] & 0x7F) << 8) | DHT_Data[3];
+
+    if(DHT_Data[2] & 0x80){
+        readings[1] *= -1;
+    }
 }
 
 
 void *mainThread(void *arg0){
 
     struct timespec ts = {0};
-    int index;
+    double finalData[2];
+    double humidity, temperatureC, temperatureF;
+
+    const char hum[32];
+    const char tempC[32];
+    const char tempF[32];
+
+    const char h[32] = "Humidity: ";
+    const char tC[32] = "Temp in C:";
+    const char tF[32] = "Temp in F";
+
 
     clock_settime(CLOCK_REALTIME, &ts);
 
@@ -265,7 +286,24 @@ void *mainThread(void *arg0){
 
         DHT_ReadData(); // Wakes up and reads the data sent from the DHT22
         countData = 0;
-        translateData();
+        translateData(finalData);
+
+        humidity = finalData[0]/10.0;
+        temperatureC = finalData[1]/10.0;
+        temperatureF = CtoF(finalData[1]/10);
+
+        sprintf(hum, "%.1f", humidity);
+        sprintf(tempC, "%.1f", temperatureC);
+        sprintf(tempF, "%.1f", temperatureF);
+
+        strcat(h, hum);
+        strcat(tC, tempC);
+        strcat(tF, tempF);
+
+        UART_write(uartHandle, &h, sizeof(h));
+        UART_write(uartHandle, &tC, sizeof(tC));
+        UART_write(uartHandle, &tF, sizeof(tF));
+
         restartCapture();
 
     }

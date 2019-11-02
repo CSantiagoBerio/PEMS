@@ -22,6 +22,7 @@ temp.obj: C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/abi_pre
 temp.obj: C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/xlocale/_time.h
 temp.obj: C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/stdlib.h
 temp.obj: C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/stdbool.h
+temp.obj: C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/string.h
 temp.obj: C:/ti/simplelink_cc32xx_sdk_3_30_00_04/source/ti/drivers/GPIO.h
 temp.obj: C:/ti/simplelink_cc32xx_sdk_3_30_00_04/source/ti/drivers/UART.h
 temp.obj: C:/ti/simplelink_cc32xx_sdk_3_30_00_04/source/ti/drivers/Timer.h
@@ -57,6 +58,7 @@ C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/abi_prefix.h:
 C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/xlocale/_time.h: 
 C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/stdlib.h: 
 C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/stdbool.h: 
+C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/string.h: 
 C:/ti/simplelink_cc32xx_sdk_3_30_00_04/source/ti/drivers/GPIO.h: 
 C:/ti/simplelink_cc32xx_sdk_3_30_00_04/source/ti/drivers/UART.h: 
 C:/ti/simplelink_cc32xx_sdk_3_30_00_04/source/ti/drivers/Timer.h: 
