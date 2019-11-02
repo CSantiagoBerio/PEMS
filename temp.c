@@ -118,7 +118,6 @@ void capture(Capture_Handle handle, uint32_t interval){
         data[countData] = interval;
         countData++;
     }
-
 }
 
 void initCapture()
@@ -257,7 +256,7 @@ void DHT_main(void){
 }
 
 
-void *mainThread(void *arg0){
+void *tempThread(void *arg0){
 
     //    const char formatData[50] = "Temp"
 
@@ -273,13 +272,6 @@ void *mainThread(void *arg0){
     initCapture(); // Initializes and Opens a Capture instance for later use
 
     while(1){
-//        double finalData[3]; // Variable that holds the final data, after translation
-//        const char dataStr[38]; // Variable that holds the formatted string, for debug purposes
-//        DHT_read(); // Wakes up and reads the data sent from the DHT22
-//        countData = 0; // Resets data count after read task finishes
-//        DHT_translateData(finalData); // Translates data from microseconds to actual floating numbers
-//        restartCapture(); // Restarts the Capture Instance
-
         DHT_main();
     }
 }
