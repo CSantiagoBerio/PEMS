@@ -61,6 +61,7 @@
 #define READ_START          "DHT22 starting read\n"
 #define READ_END            "DHT22 read ended\n"
 #define BAD_CHECKSUM        "Checksum doesn't match\n"
+#define GOOD_CHECKSUM       "Checksum matches\n"
 
 #define LOW (0)
 #define HIGH (1)
@@ -74,8 +75,7 @@ UART_Params uartParams;
 Capture_Handle captHandle;
 Capture_Params captParams;
 
-uint32_t convert[32];
-uint32_t data[81] = {0};
+int32_t data[81] = {0};
 int16_t DHT_Data[5];
 
 int countData = 0;
@@ -83,7 +83,7 @@ int allDataCaptured = 0;
 
 
 double CtoF(double temp){
-    return 1.8 * temp + 32;
+    return (1.8 * temp + 32);
 }
 
 void initUART(){
@@ -146,13 +146,11 @@ void initCapture()
 
 void restartCapture(void){
     Capture_stop(captHandle);
-    usleep(100);
     Capture_close(captHandle);
-    usleep(100);
     initCapture();
 }
 
-void DHT_ReadData(void)
+void DHT_read(void)
 {
     int status;
     int low = 4000;
@@ -162,9 +160,6 @@ void DHT_ReadData(void)
     //Starts data line as Pull Up
     GPIO_setConfig(TEMP, INPUT_PU);
     usleep(10000);
-
-    //Reset Data holding variable
-    DHT_Data[0] = DHT_Data[1] = DHT_Data[2] = DHT_Data[3] = DHT_Data[4] = 0;
 
     GPIO_setConfig(TEMP, INPUT_PU);
     usleep(1000); // Sleep/Pause program for at least 1 millisecond = 1000 microseconds
@@ -199,50 +194,41 @@ void DHT_ReadData(void)
     if(status == Capture_STATUS_ERROR){
         while(1);
     }
-    usleep(500000);
 
-    //    high = 4000;
-    //    do{
-    //        if(high == 0){
-    //            return;
-    //        }
-    //        high --;
-    //    }while(countData != 82);
+    sleep(2);
 }
 
-void translateData(double *readings){
+void DHT_translateData(double *readings){
     int checksum; // Size of bits for checksum
     int i, j;
     int32_t rawData[40] = {0}; // Array to hold our usable bits
+    int8_t dataStr[38];
 
     for(i=1, j=0;i<40, j<40;i+=2, j++){
-        if(data[i] < 30){
+        if(data[i] < 28){
             rawData[j] = 0;
         }else if(data[i] > 70){
             rawData[j] = 1;
-        }else{
-
         }
-
-        /*
-         * else { data[i] is 50 us, and we don't care, do nothing }
-         *
-         */
     }
 
+    //Reset Data holding variable
+    DHT_Data[0] = DHT_Data[1] = DHT_Data[2] = DHT_Data[3] = DHT_Data[4] = 0;
+
     for(i=0; i<8; i++){
-        DHT_Data[0] |= (rawData[i] << (7-i));
-        DHT_Data[1] |= (rawData[i+8] << (7-i));
-        DHT_Data[2] |= (rawData[i+16] << (7-i));
-        DHT_Data[3] |= (rawData[i+24] << (7-i));
-        DHT_Data[4] |= (rawData[i+32] << (7-i));
+        DHT_Data[0] |= (rawData[i]      << (7-i));
+        DHT_Data[1] |= (rawData[i+8]    << (7-i));
+        DHT_Data[2] |= (rawData[i+16]   << (7-i));
+        DHT_Data[3] |= (rawData[i+24]   << (7-i));
+        DHT_Data[4] |= (rawData[i+32]   << (7-i));
     }
 
     checksum = DHT_Data[0] + DHT_Data[1] + DHT_Data[2] + DHT_Data[3];
     if(checksum != DHT_Data[4]){
         UART_write(uartHandle, BAD_CHECKSUM, sizeof(BAD_CHECKSUM));
+    }else{
+        UART_write(uartHandle, GOOD_CHECKSUM, sizeof(GOOD_CHECKSUM));
     }
-
     readings[0] = (DHT_Data[0] << 8) | DHT_Data[1];
 
 
@@ -251,60 +237,49 @@ void translateData(double *readings){
     if(DHT_Data[2] & 0x80){
         readings[1] *= -1;
     }
+
+    readings[0] /= 10.0;
+    readings[1] /= 10.0;
+    readings[2] = CtoF(readings[1]);
+
+    sprintf(dataStr,"Humidity: %.1f %, Temp: %.1f C, %.1f F\n", readings[0], readings[1], readings[2]);
+
+    UART_write(uartHandle, &dataStr, sizeof(dataStr));
+}
+
+void DHT_main(void){
+    double finalData[3]; // Variable that holds the final data, after translation
+    const char dataStr[38]; // Variable that holds the formatted string, for debug purposes
+    DHT_read(); // Wakes up and reads the data sent from the DHT22
+    countData = 0; // Resets data count after read task finishes
+    DHT_translateData(finalData); // Translates data from microseconds to actual floating numbers
+    restartCapture(); // Restarts the Capture Instance
 }
 
 
 void *mainThread(void *arg0){
 
-    struct timespec ts = {0};
-    double finalData[2];
-    double humidity, temperatureC, temperatureF;
+    //    const char formatData[50] = "Temp"
 
-    const char hum[32];
-    const char tempC[32];
-    const char tempF[32];
-
-    const char h[32] = "Humidity: ";
-    const char tC[32] = "Temp in C:";
-    const char tF[32] = "Temp in F";
-
-
-    clock_settime(CLOCK_REALTIME, &ts);
 
     GPIO_init();
     UART_init();
     Timer_init();
     Capture_init();
 
-    GPIO_setConfig(TEMP, INPUT_PU);
+    //    GPIO_setConfig(TEMP, INPUT_PU);
 
     initUART(); // Initializes and Opens an UART Connection to print, since printf only works in Debug Mode
     initCapture(); // Initializes and Opens a Capture instance for later use
 
     while(1){
-        sleep(2);
+//        double finalData[3]; // Variable that holds the final data, after translation
+//        const char dataStr[38]; // Variable that holds the formatted string, for debug purposes
+//        DHT_read(); // Wakes up and reads the data sent from the DHT22
+//        countData = 0; // Resets data count after read task finishes
+//        DHT_translateData(finalData); // Translates data from microseconds to actual floating numbers
+//        restartCapture(); // Restarts the Capture Instance
 
-        DHT_ReadData(); // Wakes up and reads the data sent from the DHT22
-        countData = 0;
-        translateData(finalData);
-
-        humidity = finalData[0]/10.0;
-        temperatureC = finalData[1]/10.0;
-        temperatureF = CtoF(finalData[1]/10);
-
-        sprintf(hum, "%.1f", humidity);
-        sprintf(tempC, "%.1f", temperatureC);
-        sprintf(tempF, "%.1f", temperatureF);
-
-        strcat(h, hum);
-        strcat(tC, tempC);
-        strcat(tF, tempF);
-
-        UART_write(uartHandle, &h, sizeof(h));
-        UART_write(uartHandle, &tC, sizeof(tC));
-        UART_write(uartHandle, &tF, sizeof(tF));
-
-        restartCapture();
-
+        DHT_main();
     }
 }

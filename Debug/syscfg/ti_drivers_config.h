@@ -38,14 +38,8 @@ extern "C" {
  *  ======== GPIO ========
  */
 
-/* P15, LaunchPad User Button SW3 (Right) */
-#define CONFIG_GPIO_BUTTON_1        0
-/* P02, LaunchPad LED D8 (Green) */
-#define CONFIG_GPIO_LED_1           1
 /* P05 */
-#define TEMP                        2
-/* P01, LaunchPad LED D9 (Yellow) */
-#define CONFIG_GPIO_LED_0           3
+#define TEMP                        0
 
 /* LEDs are active high */
 #define CONFIG_GPIO_LED_ON  (1)
@@ -59,7 +53,7 @@ extern "C" {
  *  ======== Timer ========
  */
 
-#define TIMER                       0
+#define CONFIG_TIMER_0              0
 
 /*
  *  ======== UART ========

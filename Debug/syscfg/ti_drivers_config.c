@@ -67,14 +67,8 @@ const uint_least8_t Capture_count = CONFIG_CAPTURE_COUNT;
  *  Array of Pin configurations
  */
 GPIO_PinConfig gpioPinConfigs[] = {
-    /* CONFIG_GPIO_BUTTON_1 : LaunchPad User Button SW3 (Right) */
-    GPIOCC32XX_GPIO_22 | GPIO_DO_NOT_CONFIG,
-    /* CONFIG_GPIO_LED_1 : LaunchPad LED D8 (Green) */
-    GPIOCC32XX_GPIO_11 | GPIO_CFG_OUT_STD | GPIO_CFG_OUT_STR_MED | GPIO_CFG_OUT_LOW,
     /* TEMP */
     GPIOCC32XX_GPIO_14 | GPIO_DO_NOT_CONFIG,
-    /* CONFIG_GPIO_LED_0 : LaunchPad LED D9 (Yellow) */
-    GPIOCC32XX_GPIO_10 | GPIO_CFG_OUT_STD | GPIO_CFG_OUT_STR_LOW | GPIO_CFG_OUT_LOW,
 };
 
 /*
@@ -86,13 +80,7 @@ GPIO_PinConfig gpioPinConfigs[] = {
  *  (GPIO.optimizeCallbackTableSize = true)
  */
 GPIO_CallbackFxn gpioCallbackFunctions[] = {
-    /* CONFIG_GPIO_BUTTON_1 : LaunchPad User Button SW3 (Right) */
-    NULL,
-    /* CONFIG_GPIO_LED_1 : LaunchPad LED D8 (Green) */
-    NULL,
     /* TEMP */
-    NULL,
-    /* CONFIG_GPIO_LED_0 : LaunchPad LED D9 (Yellow) */
     NULL,
 };
 
@@ -102,8 +90,8 @@ GPIO_CallbackFxn gpioCallbackFunctions[] = {
 const GPIOCC32XX_Config GPIOCC32XX_config = {
     .pinConfigs = (GPIO_PinConfig *)gpioPinConfigs,
     .callbacks = (GPIO_CallbackFxn *)gpioCallbackFunctions,
-    .numberOfPinConfigs = 4,
-    .numberOfCallbacks = 4,
+    .numberOfPinConfigs = 1,
+    .numberOfCallbacks = 1,
     .intPriority = (~0)
 };
 
@@ -165,7 +153,7 @@ TimerCC32XX_Object timerCC32XXObjects[CONFIG_TIMER_COUNT];
  *  ======== timerCC32XXHWAttrs ========
  */
 const TimerCC32XX_HWAttrs timerCC32XXHWAttrs[CONFIG_TIMER_COUNT] = {
-    /* TIMER */
+    /* CONFIG_TIMER_0 */
     {
         .baseAddress = TIMERA0_BASE,
         .subTimer    = TimerCC32XX_timer16A,
@@ -178,11 +166,11 @@ const TimerCC32XX_HWAttrs timerCC32XXHWAttrs[CONFIG_TIMER_COUNT] = {
  *  ======== Timer_config ========
  */
 const Timer_Config Timer_config[CONFIG_TIMER_COUNT] = {
-    /* TIMER */
+    /* CONFIG_TIMER_0 */
     {
         .fxnTablePtr = &TimerCC32XX_fxnTable,
-        .object      = &timerCC32XXObjects[TIMER],
-        .hwAttrs     = &timerCC32XXHWAttrs[TIMER]
+        .object      = &timerCC32XXObjects[CONFIG_TIMER_0],
+        .hwAttrs     = &timerCC32XXHWAttrs[CONFIG_TIMER_0]
     },
 };
 
