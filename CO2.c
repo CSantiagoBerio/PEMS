@@ -32,9 +32,11 @@ UART_Handle uartLocal;
 UART_Params paramsLocal;
 
 struct timespec ts = {0};
-uint8_t cal[9] = {0xff, 0x01, 0x87, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79}; // Calibration Command
+uint8_t calZero[9] = {0xff, 0x01, 0x87, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78}; // Calibration Command
 uint8_t readCO2[9] = {0xff, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79}; // Read CO2 Command
+uint8_t calSpan[9];
 uint8_t disableAutoCal[9] = {};
+uint8_t detectRange[9];
 char packet[9]; // Resulting packet from reading UART
 
 
@@ -122,8 +124,9 @@ int getPPM(uint8_t packet[]){
 
 void calibrateMHZ16(){
 
-    UART_write(uartCO2, &cal, sizeof(cal));
+    UART_write(uartCO2, &calZero, sizeof(calZero));
     usleep(10);
+
 }
 
 
@@ -143,7 +146,8 @@ void *mainThread(void *arg0){
     bool *isAvailable;
 
     // Calibrate Sensor
-    calibrateMHZ16();
+//        calibrateMHZ16();
+//        sleep(1);
     // Read Co2 Concentration
     UART_write(uartCO2, &readCO2, buffSize);
     usleep(10);
@@ -162,7 +166,10 @@ void *mainThread(void *arg0){
     checksum = getChecksum(&packet);
     printf("Checksum: %d\n", checksum);
 
+//    UART_write(uartLocal, &checkMess, sizeof(checkMess));
+
     int ppm = getPPM(&packet);
+//    UART_write(uartLocal, &ppmMess, sizeof(ppmMess));
     printf("CO2 concentration: %d PPM\n", ppm);
 
 

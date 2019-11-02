@@ -35,7 +35,7 @@ CaptureCC32XX_Object captureCC32XXObjects[CONFIG_CAPTURE_COUNT];
 const CaptureCC32XX_HWAttrs captureCC32XXHWAttrs[CONFIG_CAPTURE_COUNT] = {
     /* TEMP_CAPTURE */
     {
-        .capturePin     = CaptureCC32XX_PIN_05,
+        .capturePin     = CaptureCC32XX_PIN_03,
         .intPriority    = (~0)
     },
 };
@@ -71,8 +71,8 @@ GPIO_PinConfig gpioPinConfigs[] = {
     GPIOCC32XX_GPIO_22 | GPIO_DO_NOT_CONFIG,
     /* CONFIG_GPIO_LED_1 : LaunchPad LED D8 (Green) */
     GPIOCC32XX_GPIO_11 | GPIO_CFG_OUT_STD | GPIO_CFG_OUT_STR_MED | GPIO_CFG_OUT_LOW,
-    /* TEMP : LaunchPad LED D10 (Red) */
-    GPIOCC32XX_GPIO_09 | GPIO_DO_NOT_CONFIG,
+    /* TEMP */
+    GPIOCC32XX_GPIO_14 | GPIO_DO_NOT_CONFIG,
     /* CONFIG_GPIO_LED_0 : LaunchPad LED D9 (Yellow) */
     GPIOCC32XX_GPIO_10 | GPIO_CFG_OUT_STD | GPIO_CFG_OUT_STR_LOW | GPIO_CFG_OUT_LOW,
 };
@@ -90,7 +90,7 @@ GPIO_CallbackFxn gpioCallbackFunctions[] = {
     NULL,
     /* CONFIG_GPIO_LED_1 : LaunchPad LED D8 (Green) */
     NULL,
-    /* TEMP : LaunchPad LED D10 (Red) */
+    /* TEMP */
     NULL,
     /* CONFIG_GPIO_LED_0 : LaunchPad LED D9 (Yellow) */
     NULL,
@@ -167,9 +167,9 @@ TimerCC32XX_Object timerCC32XXObjects[CONFIG_TIMER_COUNT];
 const TimerCC32XX_HWAttrs timerCC32XXHWAttrs[CONFIG_TIMER_COUNT] = {
     /* TIMER */
     {
-        .baseAddress = TIMERA1_BASE,
+        .baseAddress = TIMERA0_BASE,
         .subTimer    = TimerCC32XX_timer16A,
-        .intNum      = INT_TIMERA1A,
+        .intNum      = INT_TIMERA0A,
         .intPriority = (~0)
     },
 };
