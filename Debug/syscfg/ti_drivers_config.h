@@ -39,7 +39,7 @@ extern "C" {
  */
 
 /* P05 */
-#define TEMP                        0
+#define temp                        0
 
 /* LEDs are active high */
 #define CONFIG_GPIO_LED_ON  (1)

@@ -20,10 +20,10 @@ var Timer1 = Timer.addInstance();
 Power.keepDebugActiveDuringLPDS = true;
 // Name
 Power.parkPins.$name = "ti_drivers_power_PowerCC32XXPins0";
-// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-GPIO1.$name = "TEMP";
 // Mode - Select the GPIO mode
 GPIO1.mode = "Dynamic";
+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
+GPIO1.$name = "temp";
 // Assign pin
 GPIO1.gpioPin.$assign = "boosterpack.7"; // P05
 // Name - The C/C++ identifier used in applications as the index parameter passed to UART runtime APIs

@@ -10,9 +10,11 @@ GEN_OPTS__FLAG := --cmd_file="C:/Users/csant/EmbeddedWrkspace/tirtos_builds_CC32
 GEN_CMDS__FLAG := -l"C:/Users/csant/EmbeddedWrkspace/tirtos_builds_CC3220S_LAUNCHXL_release_ccs_3_30_00_04/Debug/configPkg/linker.cmd"
 
 ORDERED_OBJS += \
-"./CO2.obj" \
+"./MHZ16.obj" \
+"./dht22.obj" \
 "./syscfg/ti_drivers_config.obj" \
 "./main_tirtos.obj" \
+"./pems.obj" \
 "../CC3220S_LAUNCHXL_TIRTOS.cmd" \
 -l"ti/display/lib/display.aem4" \
 -l"ti/grlib/lib/ccs/m4/grlib.a" \
@@ -166,8 +168,8 @@ gpiointerrupt_CC3220S_LAUNCHXL_tirtos_ccs.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(GEN_MISC_FILES__QUOTED)$(BIN_OUTPUTS__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "CO2.obj" "syscfg\ti_drivers_config.obj" "main_tirtos.obj" 
-	-$(RM) "CO2.d" "syscfg\ti_drivers_config.d" "main_tirtos.d" 
+	-$(RM) "MHZ16.obj" "dht22.obj" "syscfg\ti_drivers_config.obj" "main_tirtos.obj" "pems.obj" 
+	-$(RM) "MHZ16.d" "dht22.d" "syscfg\ti_drivers_config.d" "main_tirtos.d" "pems.d" 
 	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
 	-@echo 'Finished clean'
 	-@echo ' '

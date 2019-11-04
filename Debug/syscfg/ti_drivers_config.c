@@ -67,7 +67,7 @@ const uint_least8_t Capture_count = CONFIG_CAPTURE_COUNT;
  *  Array of Pin configurations
  */
 GPIO_PinConfig gpioPinConfigs[] = {
-    /* TEMP */
+    /* temp */
     GPIOCC32XX_GPIO_14 | GPIO_DO_NOT_CONFIG,
 };
 
@@ -80,7 +80,7 @@ GPIO_PinConfig gpioPinConfigs[] = {
  *  (GPIO.optimizeCallbackTableSize = true)
  */
 GPIO_CallbackFxn gpioCallbackFunctions[] = {
-    /* TEMP */
+    /* temp */
     NULL,
 };
 

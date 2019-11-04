@@ -12,9 +12,11 @@ SYSCFG_SRCS += \
 ../gpiointerrupt.syscfg 
 
 C_SRCS += \
-../CO2.c \
+../MHZ16.c \
+../dht22.c \
 ./syscfg/ti_drivers_config.c \
-../main_tirtos.c 
+../main_tirtos.c \
+../pems.c 
 
 GEN_FILES += \
 ./syscfg/ti_drivers_config.c 
@@ -23,14 +25,18 @@ GEN_MISC_DIRS += \
 ./syscfg/ 
 
 C_DEPS += \
-./CO2.d \
+./MHZ16.d \
+./dht22.d \
 ./syscfg/ti_drivers_config.d \
-./main_tirtos.d 
+./main_tirtos.d \
+./pems.d 
 
 OBJS += \
-./CO2.obj \
+./MHZ16.obj \
+./dht22.obj \
 ./syscfg/ti_drivers_config.obj \
-./main_tirtos.obj 
+./main_tirtos.obj \
+./pems.obj 
 
 GEN_MISC_FILES += \
 ./syscfg/ti_drivers_config.h \
@@ -40,26 +46,32 @@ GEN_MISC_DIRS__QUOTED += \
 "syscfg\" 
 
 OBJS__QUOTED += \
-"CO2.obj" \
+"MHZ16.obj" \
+"dht22.obj" \
 "syscfg\ti_drivers_config.obj" \
-"main_tirtos.obj" 
+"main_tirtos.obj" \
+"pems.obj" 
 
 GEN_MISC_FILES__QUOTED += \
 "syscfg\ti_drivers_config.h" \
 "syscfg\syscfg_c.rov.xs" 
 
 C_DEPS__QUOTED += \
-"CO2.d" \
+"MHZ16.d" \
+"dht22.d" \
 "syscfg\ti_drivers_config.d" \
-"main_tirtos.d" 
+"main_tirtos.d" \
+"pems.d" 
 
 GEN_FILES__QUOTED += \
 "syscfg\ti_drivers_config.c" 
 
 C_SRCS__QUOTED += \
-"../CO2.c" \
+"../MHZ16.c" \
+"../dht22.c" \
 "./syscfg/ti_drivers_config.c" \
-"../main_tirtos.c" 
+"../main_tirtos.c" \
+"../pems.c" 
 
 SYSCFG_SRCS__QUOTED += \
 "../gpiointerrupt.syscfg" 
